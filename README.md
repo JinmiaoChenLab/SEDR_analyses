@@ -41,6 +41,7 @@ Then run following codes to generate results of SEDR and other methods.
 * Rscript DLPFC_Giotto.R sample n_clusters
 
 ## Do clustering for SEDR
+* Follow the instructions in [SEDR](https://github.com/HzFu/SEDR) to run SEDR. 
 * python DLPFC_SEDR_clustering.py sample n_clusters
 
 ## Do trajectory analyses for SEDR and Seurat
