@@ -13,8 +13,9 @@ SEDR/
 Please generate folder with structure shown above.  
 Download the scripts here and put them in script folder.
 DLPFC data can be downloaded from [SpatialLIBD](http://spatial.libd.org/spatialLIBD/). Extract and put all data within data/DLPFC folder.   
-Breast cancer data can be downloaded from [10X visium data](https://support.10xgenomics.com/spatial-gene-expression/datasets/1.1.0/V1_Breast_Cancer_Block_A_Section_1). 
-Stero-seq data has been put within Data folder. 
+Besides，data used in SEDR manuscript can be found as below:  
+* Breast cancer data can be downloaded from [10X visium data](https://support.10xgenomics.com/spatial-gene-expression/datasets/1.1.0/V1_Breast_Cancer_Block_A_Section_1). 
+* Stero-seq data has been put within Data folder. 
 
 Table of DLPFC data:
 
