@@ -1,25 +1,69 @@
-# SEDR
-## data folder structure
-SEDR/  
-----data/  
---------DLPFC/  
-------------151507/  
-----output/  
---------DLPFC/  
-------------151507/  
-----script/    
-------------DLPFC_comp.R   
+# SEDR Analyses
+Here is the analysis code for SEDR project.  
 
-Please generate folder with structure shown above.  
-Download the scripts here and put them in script folder.
-DLPFC data can be downloaded from [SpatialLIBD](http://spatial.libd.org/spatialLIBD/). Extract and put all data within data/DLPFC folder.   
-Besides，data used in SEDR manuscript can be found as below:  
-* Breast cancer data can be downloaded from [10X visium data](https://support.10xgenomics.com/spatial-gene-expression/datasets/1.1.0/V1_Breast_Cancer_Block_A_Section_1). 
-* Stero-seq data has been put within Data folder. 
+We tested SEDR on DLPFC dataset (12 slices) and compared it with 5 state-of-the 
+art methods: 
+* [BayesSpace](https://github.com/edward130603/BayesSpace)
+* [Giotto](https://github.com/RubD/Giotto)
+* [stLearn](https://github.com/BiomedicalMachineLearning/stLearn)
+* [SpaGCN](https://github.com/jianhuupenn/SpaGCN)
+* [Seurat](https://satijalab.org/seurat/)
 
-Table of DLPFC data:
 
-|Sample_ID|n_cluster|
+To run analyses code properly, we recommend you to organize working folder as shown 
+below and download the scripts into the folder. 
+
+
+
+## Benchmarking
+
+### data folder structure
+
+
+    SEDR
+    ├── data
+    │   └── DLPFC
+    │        └── 151507
+    │              ├── filtered_feature_bc_matrix.h5
+    │              ├── metadata.tsv 
+    │              └── spatial
+    │                     ├── scalefactors_json.json  
+    │                     ├── tissue_positions_list.csv  
+    │                     ├── full_image.tif  
+    │                     ├── tissue_hires_image.png  
+    │                     └── tissue_lowres_image.png  
+    ├── output      
+    │      └── DLPFC          
+    │            └── 151507 
+    └── SEDR_analyses
+        ├── DLPFC_Seurat.R  
+        └── ...  
+
+
+### Download data
+DLPFC data can be downloaded from [SpatialLIBD](https://github.com/LieberInstitute/HumanPilot/). 
+Extract and put data within data/DLPFC folder.  
+Please notice that the scale_factors_json.json and tissue_positions_list.csv can be found in 10X folder in [SpatialLIBD](https://github.com/LieberInstitute/HumanPilot/).  
+Besides, the metadata.tsv we used in SEDR is consistant with [BayesSpace](https://github.com/edward130603/BayesSpace).  
+For convenient, we have put three files within data folder here. You need to move the data folder to where we recommend. 
+
+
+
+### Run SEDR
+* Follow the instructions in [SEDR](https://github.com/Xuhang01/SEDR) to run SEDR for 12 slices. 
+* Move the results to output/DLPFC/sample.name/SEDR for further comparison.
+
+### Run state-of-the-art methods
+* Rscript DLPFC_Seurat.R sample n_clusters
+* python DLPFC_stLearn.py sample
+* python DLPFC_SpaGCN.py sample n_clusters
+* Rscript DLPFC_BayesSpace.R sample n_clusters
+* Rscript DLPFC_Giotto.R sample n_clusters
+
+
+Table of n_clsuters:
+  
+|Sample_ID|n_clusters|
 | ------------- |:-------------:|
 |151507|7|
 |151508|7|
@@ -34,27 +78,13 @@ Table of DLPFC data:
 |151675|7|
 |151676|7|
 
-Then run following codes to generate results of SEDR and other methods. 
 
-## Run state-of-the-art methods
-* Rscript DLPFC_Seurat.R sample
-* python DLPFC_stLearn.py sample
-* python DLPFC_SpaGCN.py sample n_clusters
-* Rscript DLPFC_BayesSpace.R sample n_clusters
-* Rscript DLPFC_Giotto.R sample n_clusters
-
-## Do clustering for SEDR
-* Follow the instructions in [SEDR](https://github.com/HzFu/SEDR) to run SEDR. 
-* python DLPFC_SEDR_clustering.py sample n_clusters
-
-## Do trajectory analyses for SEDR and Seurat
-* Rscript DLPFC_trajectory.R sample
-
-## Do PAGA analyses
-* python DLPFC_PAGA.py  or run DLPFC_calculate_PAGA.ipynb
-* DLPFC_PAGA.weight_comp.R
-
-## Compare SEDR and other methods
+### Compare SEDR and other methods
 * Rscript DLPFC_comp.R sample
+
+### Summary of 12 slices
 * Rscript DLPFC.ARI_boxplot.R
 
+
+## Stero-seq data
+Stero-seq data in SEDR project is included in data folder. 

@@ -1,4 +1,3 @@
-# setwd('~/Xuhang/Projects/spTrans/script/')
 args = commandArgs(trailingOnly=TRUE)
 sample.name <- args[1]
 n_clusters <- as.numeric(args[2])
@@ -35,9 +34,6 @@ d <- 15  # Number of PCs
 set.seed(104)
 dlpfc <- spatialCluster(dlpfc, q=q, d=d, platform='Visium',
                         nrep=50000, gamma=3, save.chain=TRUE)
-
-## We recoded the cluster labels to match the expected brain layers
-# labels <- dplyr::recode(dlpfc$spatial.cluster, 3, 4, 5, 6, 2, 7, 1)
 
 labels <- dlpfc$spatial.cluster
 

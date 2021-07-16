@@ -370,5 +370,5 @@ ggsave(file.path(dir.output, 'giotto.cluster.pdf'), width = 10, height = 10)
 df_meta <- data.frame(pDataDT(visium_brain))
 cluster <- paste('HMRF_k', n_cluster, '_b.40', sep='')
 df_meta$HMRF_cluster <- df_meta[, cluster]
-write.table(df_meta, file = file.path(dir.output, 'meta.tsv'), sep='\t', quote=F, row.names = F)
+write.table(df_meta, file = file.path(dir.output, 'metadata.tsv'), sep='\t', quote=F, row.names = F)
 
