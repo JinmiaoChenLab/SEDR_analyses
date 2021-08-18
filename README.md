@@ -50,7 +50,7 @@ For convenient, we have put three files within data folder here. You need to mov
 
 
 ### Run SEDR
-* Follow the instructions in [SEDR](https://github.com/Xuhang01/SEDR) to run SEDR for 12 slices. 
+* Follow the instructions in [SEDR](https://github.com/JinmiaoChenLab/SEDR) to run SEDR for 12 slices. 
 * Move the results to output/DLPFC/sample.name/SEDR for further comparison.
 
 ### Run state-of-the-art methods
