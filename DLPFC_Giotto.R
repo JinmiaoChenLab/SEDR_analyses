@@ -10,8 +10,8 @@ sample.name <- args[1]
 n_cluster <- args[2]
 
 ##### 1. Load Data
-data_path = file.path('../data/DLPFC/', sample.name)
-dir.output = file.path('../output/DLPFC/', sample.name, 'Giotto')
+data_path = file.path('./data/DLPFC/', sample.name)
+dir.output = file.path('./output/DLPFC/', sample.name, 'Giotto')
 
 
 if(!dir.exists(file.path(dir.output))){

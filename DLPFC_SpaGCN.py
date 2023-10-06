@@ -11,8 +11,8 @@ import matplotlib.pyplot as plt
 sample_name = sys.argv[1]
 n_clusters = int(sys.argv[2])
 
-dir_input = f'../data/DLPFC/{sample_name}/'
-dir_output = f'../output/DLPFC/{sample_name}/SpaGCN/'
+dir_input = f'./data/DLPFC/{sample_name}/'
+dir_output = f'./output/DLPFC/{sample_name}/SpaGCN/'
 
 if not os.path.exists(dir_output):
     os.makedirs(dir_output)

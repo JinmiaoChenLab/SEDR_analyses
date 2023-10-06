@@ -24,11 +24,11 @@ section_id = sys.argv[1]
 n_clusters = sys.argv[2]
 
 
-dir_out = f'../../../output/DLPFC/{section_id}/STAGATE'
+dir_out = f'./output/DLPFC/{section_id}/STAGATE'
 os.makedirs(dir_out, exist_ok=True)
 
 
-input_dir = os.path.join('../../data/DLPFC/', section_id)
+input_dir = os.path.join('./data/DLPFC/', section_id)
 adata = sc.read_visium(path=input_dir, count_file='filtered_feature_bc_matrix.h5')
 adata.var_names_make_unique()
 
@@ -40,7 +40,7 @@ sc.pp.log1p(adata)
 
 
 # read the annotation
-Ann_df = pd.read_csv(os.path.join('../../data/DLPFC/', section_id, 'metadata.tsv'), sep='\t', index_col=0)
+Ann_df = pd.read_csv(os.path.join('./data/DLPFC/', section_id, 'metadata.tsv'), sep='\t', index_col=0)
 Ann_df['Ground Truth'] = Ann_df['layer_guess']
 
 

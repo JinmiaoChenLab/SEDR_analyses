@@ -11,14 +11,14 @@ from sklearn.preprocessing import LabelEncoder
 import sys
 import matplotlib.pyplot as plt
 
-BASE_PATH = Path('../data/DLPFC')
+BASE_PATH = Path('./data/DLPFC')
 
 sample = sys.argv[1]
 
 TILE_PATH = Path("/tmp/{}_tiles".format(sample))
 TILE_PATH.mkdir(parents=True, exist_ok=True)
 
-OUTPUT_PATH = Path(f"../output/DLPFC/{sample}/stLearn")
+OUTPUT_PATH = Path(f"./output/DLPFC/{sample}/stLearn")
 OUTPUT_PATH.mkdir(parents=True, exist_ok=True)
 
 data = st.Read10X(BASE_PATH / sample)

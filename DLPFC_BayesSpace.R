@@ -5,8 +5,8 @@ n_clusters <- as.numeric(args[2])
 library(BayesSpace)
 library(ggplot2)
 
-dir.input <- file.path('../data/DLPFC/', sample.name)
-dir.output <- file.path('../output/DLPFC/', sample.name, '/BayesSpace/')
+dir.input <- file.path('./data/DLPFC/', sample.name)
+dir.output <- file.path('./output/DLPFC/', sample.name, '/BayesSpace/')
 
 if(!dir.exists(file.path(dir.output))){
   dir.create(file.path(dir.output), recursive = TRUE)
