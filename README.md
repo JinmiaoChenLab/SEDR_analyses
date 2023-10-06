@@ -46,7 +46,7 @@ For convenient, we have put three files within data folder here. You need to mov
 ### Run state-of-the-art methods
 * Rscript DLPFC_Seurat.R sample n_clusters
 * Rscript DLPFC_Giotto.R sample n_clusters
-* * python DLPFC_stLearn.py sample
+* python DLPFC_stLearn.py sample
 * python DLPFC_SpaGCN.py sample n_clusters
 * Rscript DLPFC_BayesSpace.R sample n_clusters
 * python DLPFC_DeepST.py sample n_clusters
