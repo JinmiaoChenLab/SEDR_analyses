@@ -1,26 +1,22 @@
 # SEDR Analyses
-Here is the analysis code for SEDR project.  
+We tested SEDR on DLPFC dataset (12 slices) and compared it with 7 state-of-the art methods: 
 
-We tested SEDR on DLPFC dataset (12 slices) and compared it with 5 state-of-the 
-art methods: 
 * [BayesSpace](https://github.com/edward130603/BayesSpace)
 * [Giotto](https://github.com/RubD/Giotto)
 * [stLearn](https://github.com/BiomedicalMachineLearning/stLearn)
 * [SpaGCN](https://github.com/jianhuupenn/SpaGCN)
 * [Seurat](https://satijalab.org/seurat/)
+* [DeepST](https://github.com/JiangBioLab/DeepST)
+* [STAGATE](https://github.com/zhanglabtools/STAGATE)
 
 
-To run analyses code properly, we recommend you to organize working folder as shown 
-below and download the scripts into the folder. 
+We highly recommend you to organize the folder as shown below and download the data and scripts into the correct folder. 
 
-
-
-## Benchmarking
 
 ### data folder structure
 
 
-    SEDR
+    SEDR_analyses
     ├── data
     │   └── DLPFC
     │        └── 151507
@@ -34,10 +30,9 @@ below and download the scripts into the folder.
     │                     └── tissue_lowres_image.png  
     ├── output      
     │      └── DLPFC          
-    │            └── 151507 
-    └── SEDR_analyses
-        ├── DLPFC_Seurat.R  
-        └── ...  
+    │            └── 151507
+    ├── DLPFC_Seurat.R  
+    └── ...  
 
 
 ### Download data
@@ -48,17 +43,14 @@ Besides, the metadata.tsv we used in SEDR is consistant with [BayesSpace](https:
 For convenient, we have put three files within data folder here. You need to move the data folder to where we recommend. 
 
 
-
-### Run SEDR
-* Follow the instructions in [SEDR](https://github.com/JinmiaoChenLab/SEDR) to run SEDR for 12 slices. 
-* Move the results to output/DLPFC/sample.name/SEDR for further comparison.
-
 ### Run state-of-the-art methods
 * Rscript DLPFC_Seurat.R sample n_clusters
-* python DLPFC_stLearn.py sample
+* Rscript DLPFC_Giotto.R sample n_clusters
+* * python DLPFC_stLearn.py sample
 * python DLPFC_SpaGCN.py sample n_clusters
 * Rscript DLPFC_BayesSpace.R sample n_clusters
-* Rscript DLPFC_Giotto.R sample n_clusters
+* python DLPFC_DeepST.py sample n_clusters
+* python DLPFC_STAGATE.py sample n_clusters
 
 
 Table of n_clsuters:
@@ -80,6 +72,7 @@ Table of n_clsuters:
 
 
 ### Compare SEDR and other methods
+For each sample, run following code
 * Rscript DLPFC_comp.R sample
 
 ### Summary of 12 slices
