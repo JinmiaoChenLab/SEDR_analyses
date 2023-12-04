@@ -14,9 +14,9 @@ data_path = file.path('./data/DLPFC/', sample.name)
 dir.output = file.path('./output/DLPFC/', sample.name, 'Giotto')
 
 
-if(!dir.exists(file.path(dir.output))){
-  dir.create(file.path(dir.output), recursive = TRUE)
-}
+# if(!dir.exists(file.path(dir.output))){
+#   dir.create(file.path(dir.output), recursive = TRUE)
+# } # this code is not needed since createGiottoObject() will create the output directory if it does not exists
 
 
 expr_data_path=fs::path(data_path, "filtered_feature_bc_matrix.h5")
@@ -29,10 +29,15 @@ myinst=createGiottoInstructions(save_plot=T, show_plot=F, save_dir=dir.output, p
 
 
 ##### 2. Create Giotto object & process data.
-visium_brain <- createGiottoObject(raw_exprs = raw_matrix, 
+visium_brain <- createGiottoObject(expression = raw_matrix, # replace raw exprs with expression
                                    spatial_locs = spatial_locations[,.(row_pxl,-col_pxl)], 
-                                   instructions = myinst, 
-                                   cell_metadata = spatial_locations[,.(in_tissue, array_row, array_col)])
+                                   instructions = myinst
+                                   #cell_metadata = spatial_locations[,.(in_tissue, array_row, array_col)]
+                                   )
+
+# add metadata
+visium_brain <- addCellMetadata(visium_brain,
+                                new_metadata = spatial_locations[,.(in_tissue, array_row, array_col)])
 
 metadata = pDataDT(visium_brain)
 in_tissue_barcodes = metadata[in_tissue == 1]$cell_ID
@@ -53,14 +58,14 @@ visium_brain <- addStatistics(gobject = visium_brain)
 
 ###### 3. Dimensional reduction
 # HVG
-visium_brain <- calculateHVG(gobject = visium_brain)
+visium_brain <- calculateHVF(gobject = visium_brain) # replace calculateHVG with calculateHVF
 # PCA
 ## select genes based on HVG and gene statistics, both found in gene metadata
 gene_metadata = fDataDT(visium_brain)
-featgenes = gene_metadata[hvg == 'yes' & perc_cells > 3 & mean_expr_det > 0.4]$gene_ID
+featgenes = gene_metadata[hvf == 'yes' & perc_cells > 3 & mean_expr_det > 0.4]$feat_ID # replace hvg with hvf; replace gene_ID with feat_ID
 ## run PCA on expression values (default)
 visium_brain <- runPCA(gobject = visium_brain, 
-                       genes_to_use = featgenes, 
+                       feats_to_use = featgenes, # replace genes_to_use with feats_to_use
                        scale_unit = F, 
                        center=T, 
                        method="factominer")
@@ -83,9 +88,10 @@ spatial_genes=silhouetteRankTest(visium_brain,
                                  output=file.path(dir.output, "sil.result"), 
                                  matrix_type="dissim", 
                                  num_core=20, 
-                                 parallel_path="/home/xuhang/Xuhang/Tools/basic/GNU_parallel/bin/", 
+                                 parallel_path = "/usr/local/bin/",
+                                 #parallel_path="/home/xuhang/Xuhang/Tools/basic/GNU_parallel/bin/", 
                                  verbose=T, 
-                                 expression_values="norm", 
+                                 expression_values="normalized", # replace norm with normalized
                                  query_sizes=10)
 
 ### cluster the top 1500 spatial genes into 20 clusters
@@ -100,19 +106,22 @@ subset_genes <- ext_spatial_genes
 spatial_network_name  <- 'spatial_network'
 b <- 0
 
-
+# I suggest replacing select_spatialNetwork with Giotto getSpatialNetwork()
 select_spatialNetwork <- function(gobject,
                                   name = NULL,
                                   return_network_Obj = FALSE) {
   
-  if (!is.element(name, names(gobject@spatial_network))){
+  # get getSpatialNetwork slot
+  spatial_network = getSpatialNetwork(gobject)
+  
+  if (!is.element(name, slot(spatial_network, "name"))){ # replace names(gobject@spatial_network) with slot(spatial_network, "name")
     message = sprintf("spatial network %s has not been created. Returning NULL.
                       check which spatial networks exist with showNetworks() \n", name)
     warning(message)
     return(NULL)
   }else{
-    networkObj = gobject@spatial_network[[name]]
-    networkDT = networkObj$networkDT
+    networkObj = gobject@spatial_network[['cell']][[name]] # add spat_unit 'cell'
+    networkDT = networkObj@networkDT # replace $ with @
   }
   
   if (return_network_Obj == TRUE){
@@ -125,22 +134,26 @@ select_spatialNetwork <- function(gobject,
 
 spatial_network = select_spatialNetwork(gobject,name = spatial_network_name,return_network_Obj = FALSE)
 
+# you can replace above code with:
+spatial_network = getSpatialNetwork(gobject, name = spatial_network_name, output = 'networkDT')
+
+# I suggest replacing this function with Giotto::getExpression()
 select_expression_values <- function(gobject, values) {
   
-  if(values == 'scaled' & is.null(gobject@norm_scaled_expr)) {
+  if(values == 'scaled' & is.null(getExpression(gobject, values = 'scaled'))) { # replace gobject@norm_scaled_expr
     stop('run first scaling step')
   } else if(values == 'scaled') {
-    expr_values = gobject@norm_scaled_expr
-  } else if(values == 'normalized' & is.null(gobject@norm_expr)) {
+    expr_values = getExpression(gobject, values = 'scaled', output = 'matrix') # replace gobject@norm_scaled_expr
+  } else if(values == 'normalized' & is.null(getExpression(gobject, values = 'normalized'))) { # replace gobject@norm_expr
     stop('run first normalization step')
   } else if(values == 'normalized') {
-    expr_values = gobject@norm_expr
-  } else if(values == 'custom' & is.null(gobject@custom_expr)) {
+    expr_values = getExpression(gobject, values = 'normalized', output = 'matrix') # replace gobject@norm_expr
+  } else if(values == 'custom' & is.null(getExpression(gobject, values = 'custom'))) { # replace gobject@custom_expr
     stop('first add custom expression matrix')
   } else if(values == 'custom') {
-    expr_values = gobject@custom_expr
+    expr_values = getExpression(gobject, values = 'custom', output = 'matrix') # replace gobject@custom_expr
   } else if(values == 'raw') {
-    expr_values = gobject@raw_exprs
+    expr_values = getExpression(gobject, output = 'matrix') # replace gobject@raw_exprs
   }
   
   return(expr_values)
@@ -151,7 +164,7 @@ select_expression_values <- function(gobject, values) {
 
 # get expression matrix
 values = match.arg(expression_values, c('normalized', 'scaled', 'custom'))
-expr_values = select_expression_values(gobject = gobject, values = values)
+expr_values = getExpression(gobject = gobject, values = values, output = 'matrix') # replace select_expression_values()
 
 if(!is.null(subset_genes)) {
   expr_values = expr_values[rownames(expr_values) %in% subset_genes,]
@@ -286,15 +299,17 @@ visium_brain = subsetGiotto(visium_brain, cell_ids = subset_cell_IDs)
 
 #####################################
 
-
-spat_cor_netw_DT=detectSpatialCorGenes(visium_brain, 
+# replace detectSpatialCorGenes with detectSpatialCorFeats
+spat_cor_netw_DT=detectSpatialCorFeats(visium_brain, 
                                        expression_values = 'scaled',
                                        method='network', 
                                        spatial_network_name='spatial_network', 
-                                       subset_genes=ext_spatial_genes,
+                                       subset_feats=ext_spatial_genes, #replace subset_genes
                                        network_smoothing=0)
 # cluster spatial genes
-spat_cor_netw_DT=clusterSpatialCorGenes(spat_cor_netw_DT, 
+
+# replace clusterSpatialCorGenes with clusterSpatialCorFeats
+spat_cor_netw_DT=clusterSpatialCorFeats(spat_cor_netw_DT, 
                                         name='spat_netw_clus', k=15)
 # # visualize clusters
 # heatmSpatialCorGenes(visium_brain, 
